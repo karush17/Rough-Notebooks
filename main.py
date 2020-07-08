@@ -9,6 +9,7 @@ import itertools, time, math
 import torch
 import pickle as pkl
 from sac import SAC
+from utils import dm_wrap
 from model import NeuralNetwork
 from parser import build_parser
 from ES import crossover, sample_noise, evaluate_neuralnet, evaluate_noisy_net, worker, normalized_rank, save_results, eval
@@ -36,12 +37,19 @@ if __name__ == "__main__":
     parser = build_parser()
     args = parser.parse_args()
 
+    if 'dm2gym' in args.env:
+        env = gym.make(args.env, environment_kwargs={'flat_observation': True})
+        STATE_DIM = env.observation_space["observations"].shape[0]
+        wrap = True
+    else:
+        env = gym.make(args.env)
+        STATE_DIM = env.observation_space.shape[0]
+        wrap = False
+
     # Environment
-    env = gym.make(args.env)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     env.seed(args.seed)
-    STATE_DIM = env.observation_space.shape[0]
     ACTION_DIM = env.action_space
     NUM_WINNERS = int(args.elite_rate*args.pop)
     BATCH_SIZE = args.pop
@@ -147,7 +155,7 @@ if __name__ == "__main__":
                 episode_reward = 0
                 episode_steps = 0
                 done = False
-                state = env.reset()
+                state = dm_wrap(env.reset(),wrap=wrap)
 
                 while not done:
                     if args.start_steps > total_numsteps:
@@ -165,6 +173,8 @@ if __name__ == "__main__":
                     next_state, reward, done, _ = env.step(action) # Step
                     episode_reward += reward
                     episode_steps += 1
+
+                    next_state = dm_wrap(next_state, wrap=wrap)
 
                     # Ignore the "done" signal if it comes from hitting the time horizon.
                     # (https://github.com/openai/spinningup/blob/master/spinup/algos/sac/sac.py)

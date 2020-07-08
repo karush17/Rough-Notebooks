@@ -13,6 +13,7 @@ import pickle as pkl
 import scipy.stats as ss
 import gym
 import random
+from utils import dm_wrap
 
 checkpoint_name = './Checkpoint/'
 use_cuda = torch.cuda.is_available()
@@ -64,9 +65,9 @@ def sample_noise(neural_net):
         nn_noise.append(noise)
     return np.array(nn_noise)
 
-def evaluate_neuralnet(nn, env):
+def evaluate_neuralnet(nn, env, wrap):
     # Evaluate an agent running it in the environment and computing the total reward
-    obs = env.reset()
+    obs = dm_wrap(env.reset(), wrap=wrap)
     game_reward = 0
     reward = 0
     done = False
@@ -80,7 +81,7 @@ def evaluate_neuralnet(nn, env):
         # action = np.asarray([action])
         new_obs, reward, done, _ = env.step(action)
         
-        obs = new_obs
+        obs = dm_wrap(new_obs, wrap=wrap)
 
         game_reward += reward
 
@@ -89,7 +90,7 @@ def evaluate_neuralnet(nn, env):
         
     return game_reward
 
-def evaluate_noisy_net(STD_NOISE, noise, neural_net, env, elite_queue):
+def evaluate_noisy_net(STD_NOISE, noise, neural_net, env, elite_queue, wrap):
     # Evaluate a noisy agent by adding the noise to the plain agent
     old_dict = neural_net.state_dict()
 
@@ -100,7 +101,7 @@ def evaluate_noisy_net(STD_NOISE, noise, neural_net, env, elite_queue):
     elite_queue.put(neural_net.state_dict())
 
     # evaluate the agent with the noise
-    reward = evaluate_neuralnet(neural_net, env)
+    reward = evaluate_neuralnet(neural_net, env, wrap)
     # load the previous paramater (the ones without the noise)
     neural_net.load_state_dict(old_dict)
     
@@ -109,7 +110,13 @@ def evaluate_noisy_net(STD_NOISE, noise, neural_net, env, elite_queue):
 def worker(args, STD_NOISE, STATE_DIM, ACTION_DIM, params_queue, output_queue, elite_queue):
     # Function execute by each worker: get the agent' NN, sample noise and evaluate the agent adding the noise. Then return the seed and the rewards to the central unit
    
-    env = gym.make(args.env)
+    if 'dm2gym' in args.env:
+        env = gym.make(args.env, environment_kwargs={'flat_observation': True})
+        wrap = True
+    else:
+        env = gym.make(args.env)
+        wrap = False
+
     # env = CyclicMDP()
     actor = NeuralNetwork(STATE_DIM, ACTION_DIM.shape[0], args.hidden_size)
     while True:
@@ -126,9 +133,9 @@ def worker(args, STD_NOISE, STATE_DIM, ACTION_DIM, params_queue, output_queue, e
 
             noise = sample_noise(actor)
 
-            pos_rew = evaluate_noisy_net(STD_NOISE, noise, actor, env, elite_queue)
+            pos_rew = evaluate_noisy_net(STD_NOISE, noise, actor, env, elite_queue, wrap)
             # Mirrored sampling
-            neg_rew = evaluate_noisy_net(STD_NOISE, -noise, actor, env, elite_queue)
+            neg_rew = evaluate_noisy_net(STD_NOISE, -noise, actor, env, elite_queue, wrap)
 
             output_queue.put([[pos_rew, neg_rew], seed])
         else:
