@@ -26,6 +26,8 @@ gym==0.15.4
 numpy
 torch==1.4.0
 mujoco_py==1.50.1.59
+dm2gym
+dm_control
 ```
 These can be installed using the terminal command `pip install -r requirements.txt`.
 
@@ -79,51 +81,34 @@ virtualenv myenv
 source myenv/bin/activate
 ```
 
-Results from the paper can be reproduced using the following commands-
+Results from the paper can be reproduced using the following commands-  
 
-1. HalfCheetah-v2
+__MuJoCo__
+
 ```
 python main.py --env HalfCheetah-v2
-```
-
-2. Humanoid-v2
-```
 python main.py --env Humanoid-v2 --num_steps 5e6
-```
-
-3. Ant-v2
-```
-python main.py --env Ant-v2 --sac_episodes 10 -lr_es 0.001
-```
-
-4. Walker2d-v2
-```
+python main.py --env Ant-v2 --sac_episodes 10 --lr_es 0.001
 python main.py --env Walker2d-v2 --sac_episodes 10
-```
-
-5. Swimmer-v2
-```
 python main.py --env Swimmer-v2 --sac_episodes 1 --grad_models 1
-```
-
-6. Hopper-v2
-```
 python main.py --env Hopper-v2 --num_steps 2e6 --sac_episodes 10
-```
-
-7. Reacher-v2
-```
 python main.py --env Reacher-v2 --num_steps 2e6
-```
-
-8. LunarLanderContinuous-v2
-```
 python main.py --env LunarLanderContinuous-v2
+python main.py --env InvertedDoublePendulum-v2
 ```
 
-9. InvertedDoublePendulum-v2
+__DeepMind Control Suite__
+
 ```
-python main.py --env InvertedDoublePendulum-v2
+python main.py --env dm2gym:CheetahRun-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
+python main.py --env dm2gym:CartpoleSwingup-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 5
+python main.py --env dm2gym:AcrobotSwingup-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
+python main.py --env dm2gym:QuadrupedWalk-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
+python main.py --env dm2gym:QuadrupedRun-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
+python main.py --env dm2gym:WalkerWalk-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 5
+python main.py --env dm2gym:WalkerRun-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 5
+python main.py --env dm2gym:FishUpright-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
+python main.py --env dm2gym:FishSwim-v0 --lr_es 0.01 --mutation 0.01 --sac_episodes 1
 ```
 
 # Credits
