@@ -55,8 +55,6 @@ def build_parser():
                         help='save model and results every xth step (default: 20000)')
     parser.add_argument('--sac_episodes', type=int, default=5, metavar='N',
                         help='number of episodes played by the sac agent (default: 5)')
-    parser.add_argument('--clip', type=float, default=1e-4, metavar='N',
-                        help='clip parameter for AMT (default: 1e-4)')
 
     return parser
 
