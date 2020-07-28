@@ -3,19 +3,31 @@
 
 <p align="center"><img src="/images/schematic.gif"  height="400" width="650"/></p>
 
-This is the original implementation of Evolution-based Soft Actor-Critic (ESAC) introduced in ["Evolve To Control: Evolution-based Soft Actor-Critic for Scalable Reinforcement Learning"](https://arxiv.org/). ESAC combines Evolution Strategies (ES) with Soft Actor-Critic (SAC) for state-of-the-performance equivalent to SAC and scalability comparable to ES. ESAC abstracts exploration from exploitation by exploring policies in weight space using evolutions and optimizing gradient-based knowledge using the SAC framework. ESAC makes use of a novel soft winner selection function and carries out genetic crossovers in hindsight. ESAC also introduces the novel Automatic Mutation Tuning (AMT) which maximizes the mutation rate of ES in a small clipped region and provides significant hyperparameter robustness.  
+This is the original implementation of Evolution-based Soft Actor-Critic (ESAC) introduced in ["Evolve To Control: Evolution-based Soft Actor-Critic for Scalable Reinforcement Learning"](https://arxiv.org/abs/2007.13690). ESAC combines Evolution Strategies (ES) with Soft Actor-Critic (SAC) for state-of-the-performance equivalent to SAC and scalability comparable to ES. ESAC abstracts exploration from exploitation by exploring policies in weight space using evolutions and optimizing gradient-based knowledge using the SAC framework. ESAC makes use of a novel soft winner selection function and carries out genetic crossovers in hindsight. ESAC also introduces the novel Automatic Mutation Tuning (AMT) which maximizes the mutation rate of ES in a small clipped region and provides significant hyperparameter robustness.  
 
 Find out more-
-* [arXiv](https://arxiv.org/)
+* [arXiv](https://arxiv.org/abs/2007.13690)
 * [Blog Post](https://karush17.github.io/esac-web/blog.html)
 * [Project Website](https://karush17.github.io/esac-web/)
 * [Videos](https://karush17.github.io/esac-web/videos.html)
 
-<!-- If you find our algorithm helpful then please cite the following-  
+If you find our algorithm helpful then please cite the following-  
 
 ```
-
-``` -->
+@article{karush17,
+  author    = {Karush Suri and
+               Xiao Qi Shi and
+               Konstantinos N. Plataniotis and
+               Yuri A. Lawryshyn},
+  title     = {Evolve To Control: Evolution-based Soft Actor-Critic for Scalable Reinforcement Learning},
+  journal   = {CoRR},
+  volume    = {abs/2007.13690},
+  year      = {2020},
+  url       = {https://arxiv.org/abs/2007.13690},
+  archivePrefix = {arXiv},
+  eprint    = {2007.13690},
+}
+``` 
 
 # Requirements
 
