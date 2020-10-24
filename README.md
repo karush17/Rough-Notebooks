@@ -1,4 +1,4 @@
-# Evolve To Control
+# Maximum Mutation Reinforcement Learning for Scalable Control
 [Karush Suri](https://karush17.github.io/), Xiao Qi Shi, Konstantinos N. Plataniotis, Yuri A. Lawryshyn
 
 <p align="center"><img src="/images/schematic.gif"  height="400" width="650"/></p>
